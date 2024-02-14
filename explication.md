@@ -18,6 +18,15 @@ horn modeling : 模拟喇叭。在理想情况下，系统对所有频率的处�
 ## 阶段实现方法
 stereo to mono : 最广泛使用的方法是计算两个声道的平均值.  
 lowpass filter : 两个butterworth filter  
+                 import("stdfaust.lib");
+
+                // Define Butterworth lowpass filter coefficients
+                ButterworthLowpass(fc) = 
+                      fi.lowpass(1, 2*fc);
+
+                // Define the Butterworth filter and its output
+                process = ButterworthLowpass(1000) : _;
+
 distortion : 模拟这种失真的选择方式是使用两种不同的函数：一种用于在大声部分创建非线性，另一种用于软音频样本。  
              双曲正切函数用于第一个目的，因为它在信号的低值时具有线性特性，并且在高信号值时饱和。通过引入一个参数base并对函数进行归一化，可以控制引入的失真量.  
              y = tanh(base * x)/tanh(base)  
