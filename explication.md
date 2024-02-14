@@ -18,7 +18,8 @@ horn modeling : 模拟喇叭。在理想情况下，系统对所有频率的处�
 ## 阶段实现方法
 stereo to mono : 最广泛使用的方法是计算两个声道的平均值.  
 lowpass filter : 两个butterworth filter  
-                 import("stdfaust.lib");
+                
+                import("stdfaust.lib");
 
                 // Define Butterworth lowpass filter coefficients
                 ButterworthLowpass(fc) = 
