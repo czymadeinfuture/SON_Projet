@@ -1,5 +1,5 @@
 # _PROCESS_
-input -> stereo to mono -> lowpass filter (signal bandwidth) -> distortion -> Clicks -> Thumps -> Hiss -> Wow & flutter -> lowpass filter -> horn modeling 
+input -> stereo to mono -> lowpass filter (signal bandwidth) -> Clicks -> Thumps -> Hiss -> Wow & flutter -> lowpass filter -> horn modeling 
 
 ## 阶段解释
 stereo to mono : 立体声道变成单声道  
