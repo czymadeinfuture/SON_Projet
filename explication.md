@@ -35,3 +35,17 @@ distortion : 模拟这种失真的选择方式是使用两种不同的函数：�
              y = sign(x)⋅ abs(x) **base    
              基数越高，引入的失真就越多.  
 clicks : 
+             a1 = 10.7;
+b1 = 1.06;
+duration(x) = b1 * (a1^-b1) * (x^(b1-1)) * exp(-(x/a1)^b1);
+
+a2 = 0.2;
+b2 = 2433.8;
+gap(x) = (1/(b^a)*ma.gamma(a2)) * x^(a2-1) * exp(x/b2);
+
+a3 = -3.6;
+b3 = 0.74;
+amplitude(x) = 1/(x * b2 * (2 * ma.PI)^(1/2)) * exp(-(log(x) - a3)^2 / (2 * b3 * b3)) * random_sign * 0.2 / expect;
+
+random_sign = (no.noise >= 0) : (1) : (-1);
+expect = exp(a3 + b3*b3/2);
