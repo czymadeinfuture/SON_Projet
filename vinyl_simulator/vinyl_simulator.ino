@@ -123,9 +123,6 @@ void setGain(int gainLevel) {
 }
 
 void loop() {
-  playFile("TEST.WAV");
-  delay(1000);
-  /*
   if (Serial.available() > 0) {
     char command = Serial.read();
 
@@ -150,6 +147,5 @@ void loop() {
     
     }
   }
-  */
 }
 
