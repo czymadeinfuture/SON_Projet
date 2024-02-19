@@ -8,24 +8,32 @@
 
 
 AudioPlaySdWav           playWav1;
+AudioSynthWaveformSine   sine1;
+AudioEffectMultiply      multiply1;
+AudioEffectMultiply      multiply2;
 AudioOutputI2S           i2s1;
 AudioMixer4              mixer1; // mixer for the left channel
 AudioMixer4              mixer2; // mixer for the right channel      
 clicks                   click;
-thrumps                  thrump;        
-
+thrumps                  thrump;   
+     
 // connect playWav1, click and thrump to the mixer
+AudioConnection          patchCord1(playWav1, 0, multiply1, 0);
+AudioConnection          patchCord2(sine1, 0, multiply1, 1);
 
-AudioConnection          patchCord1(playWav1, 0, mixer1, 0);
-AudioConnection          patchCord2(click, 0, mixer1, 1);  
-AudioConnection          patchCord3(thrump, 0, mixer1, 2);
+AudioConnection          patchCord3(playWav1, 1, multiply2, 0);
+AudioConnection          patchCord4(sine1, 0, multiply2, 1);
 
-AudioConnection          patchCord4(playWav1, 1 , mixer2, 0);
-AudioConnection          patchCord5(click, 0, mixer2, 1);
-AudioConnection          patchCord6(thrump, 0, mixer2, 2);
+AudioConnection          patchCord5(multiply1, 0, mixer1, 0);
+AudioConnection          patchCord6(click, 0, mixer1, 1);  
+AudioConnection          patchCord7(thrump, 0, mixer1, 2);
 
-AudioConnection          patchCord7(mixer1, 0, i2s1, 0);
-AudioConnection          patchCord8(mixer2, 0, i2s1, 1);
+AudioConnection          patchCord8(multiply2, 0, mixer2, 0);
+AudioConnection          patchCord9(click, 0, mixer2, 1);
+AudioConnection          patchCord10(thrump, 0, mixer2, 2);
+
+AudioConnection          patchCord11(mixer1, 0, i2s1, 0);
+AudioConnection          patchCord12(mixer2, 0, i2s1, 1);
 
 AudioControlSGTL5000     sgtl5000_1;
 
@@ -53,12 +61,14 @@ void setup() {
     }
   }
   
+  sine1.frequency(33/60); // set the sine wave
+  sine1.amplitude(1.007); // set the amplitude of the sine wave
   
-  mixer1.gain(0, 0.0); // set the gain for the playWav1
+  mixer1.gain(0, 0.3); // set the gain for the playWav1
   mixer1.gain(1, 2000.0); // set the gain for the click
   mixer1.gain(2, 3000.0); // set the gain for the thrump
   
-  mixer2.gain(0, 0.0); // set the gain for the playWav1
+  mixer2.gain(0, 0.3); // set the gain for the playWav1
   mixer2.gain(1, 2000.0); // set the gain for the click
   mixer2.gain(2, 3000.0); // set the gain for the thrump 
   
@@ -76,7 +86,7 @@ void playFile(const char *filename){
   delay(25);
 
   Serial.println(playWav1.isPlaying() ? "File is playing" : "File is not playing");
-  
+
   int thrump_num = 1;
   while (playWav1.isPlaying()) {
     musicPlaybackPosition = playWav1.positionMillis();
@@ -94,6 +104,8 @@ void playFile(const char *filename){
   
   // When the file is finished (playWav1.isPlaying() == false)
   Serial.println("File has finished playing");
+  patchCord11.disconnect();
+  patchCord12.disconnect();
   
   // Stop the click and thrump
   thrump.Setplay();
@@ -102,6 +114,7 @@ void playFile(const char *filename){
   click.Resetindex();
   Serial.println("Click stopped");
   
+  // Stop the sine wave
 }
 
 void setGain(int gainLevel) {
