@@ -16,12 +16,10 @@ class clicks : public AudioStream
     float Duration();
     float Gap();
     float Amplitude();
-    void generate_click(float time);
-    void Isplaying();
+    void Setplay(unsigned long Time);
+    void Resetindex();
     float click_index = 1.0;
     float time = 0.0;
-    bool is_click = false;
-    bool is_playing = false;
 
   private:
     float a1;
@@ -30,6 +28,7 @@ class clicks : public AudioStream
     float b2;
     float a3;
     float b3;
+    bool is_click;
 };
 
 #endif

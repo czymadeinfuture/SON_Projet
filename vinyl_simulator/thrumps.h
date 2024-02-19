@@ -12,12 +12,12 @@ class thrumps : public AudioStream
     ~thrumps();
     
     virtual void update();
-    bool is_thrump = false;
-    void Isplaying();
-  private:
+    void Setplay();
     float discon_time;
     float tail_time;
     float gap; 
+    bool is_thrump;
+    
 };
 
 #endif
