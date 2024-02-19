@@ -49,9 +49,8 @@ float clicks::Amplitude(){
   return am;
 }
 
-void clicks::Setplay(unsigned long Time){
+void clicks::Setplay(){
   is_click = not is_click;
-  time = Time/1000.0;
 }
 
 void clicks::Resetindex(){

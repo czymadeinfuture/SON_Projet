@@ -82,7 +82,7 @@ void playFile(const char *filename){
     musicPlaybackPosition = playWav1.positionMillis();
     // If it is the time to play the click or the thrump, set the play
     if (musicPlaybackPosition >= click.click_index * 1000 && musicPlaybackPosition <= click.click_index * 1000 + 5) {
-      click.Setplay(musicPlaybackPosition);
+      click.Setplay();
       Serial.println("Click started at " + String(musicPlaybackPosition));
     };
     if (musicPlaybackPosition >= thrump.gap * 1000 * thrump_num && musicPlaybackPosition <= thrump.gap * 1000 * thrump_num + 10) {
@@ -98,7 +98,7 @@ void playFile(const char *filename){
   // Stop the click and thrump
   thrump.Setplay();
   Serial.println("Thrump stopped");
-  click.Setplay(0);
+  click.Setplay();
   click.Resetindex();
   Serial.println("Click stopped");
   
