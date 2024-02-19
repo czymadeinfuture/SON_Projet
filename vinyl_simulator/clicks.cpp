@@ -1,6 +1,7 @@
 #include "clicks.h"
 #include <cmath>
 #include <cstdlib>
+#include <random>
 #define MULT_16 32767
 #define SAMPLE_RATE_HZ 44100
 #define AUDIO_OUTPUTS 1
@@ -19,13 +20,28 @@ AudioStream(AUDIO_OUTPUTS, new audio_block_t*[AUDIO_OUTPUTS])
 
 clicks::~clicks(){}
 
-
+// Generate a random duration by using a Weibull distribution
 float clicks::Duration(){
- return  b1 * (pow(a1, -b1)) * (pow(time,b1-1)) * exp(-pow(time/a1,b1));
+  std::default_random_engine generator;
+
+  double shape = 10.69;
+  double scale = 1.06;
+
+  std::weibull_distribution<double> distribution(shape, scale);
+  float dur = distribution(generator);
+  return dur;
 }
 
+// Generate a random gap by using a Gamma distribution
 float clicks::Gap(){
-  return  1/(pow(b2,a2) * tgamma(a2 + 1)) * pow(time,a2 - 1) * exp(time/b2);
+  std::default_random_engine generator;
+
+  double shape = 0.2;
+  double scale = 2433.8;
+
+  std::gamma_distribution<double> distribution(shape, scale);
+  float gap = distribution(generator);
+  return gap;
 }
 
 float clicks::Amplitude(){
@@ -76,7 +92,7 @@ void clicks::update(){
               block[channel] = allocate(); 
             }
           }
-          click_index = (clickGap <= 0.01) ? click_index + 0.01 : click_index + (round(clickGap * 100))/100 ;  
+          click_index = (clickGap <= 1.0) ? click_index + 1.0 : click_index + (round(clickGap));  
           transmit(block[channel], channel);
           release(block[channel]); 
           is_click = false;
