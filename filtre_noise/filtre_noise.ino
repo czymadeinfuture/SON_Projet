@@ -19,9 +19,9 @@
 LOWPASS lowpass;
 AudioPlaySdWav           playSdWav1;
 AudioOutputI2S           i2s1;
-AudioConnection          patchCord1(playSdWav1, 0, lowpass,0); // 将WAV播放器的左声道连接到低通滤波器的输入
-AudioConnection          patchCord2(playSdWav1, 1, lowpass, 1); // 如果您的滤波器是双声道的，也将WAV播放器的右声道连接到低通滤波器
-AudioConnection          patchCord3(lowpass, 0, i2s1, 0); // 将滤波器的输出连接到I2S输出的左声道
+AudioConnection          patchCord1(playSdWav1, 0, lowpass,0); 
+AudioConnection          patchCord2(playSdWav1, 1, lowpass, 1); 
+AudioConnection          patchCord3(lowpass, 0, i2s1, 0); 
 AudioConnection          patchCord4(lowpass, 1, i2s1, 1);
 AudioControlSGTL5000     sgtl5000_1;
 
@@ -40,21 +40,21 @@ AudioControlSGTL5000     sgtl5000_1;
 //#define SDCARD_MOSI_PIN  11
 //#define SDCARD_SCK_PIN   13
 
-const char* songList[] = {"SDTEST1.WAV", "SDTEST2.WAV", "SDTEST3.WAV","SDTEST4.WAV"};
-int currentSongIndex = 0;  // 初始时设置为0
+const char* songList[] = {"SDTEST1.WAV", "SDTEST2.WAV", "SDTEST3.WAV","SDTEST4.WAV","TEST.WAV"};
+int currentSongIndex = 0;  
 int songListSize = sizeof(songList) / sizeof(songList[0]);
 
 void playNextSong() {
   if (playSdWav1.isPlaying()) {
-    playSdWav1.stop();  // 如果当前有歌曲正在播放，先停止它
+    playSdWav1.stop();  
   }
 
-  currentSongIndex++;  // 移动到下一首歌曲
+  currentSongIndex++; 
   if (currentSongIndex >= songListSize) {
-    currentSongIndex = 0;  // 如果已经是列表中的最后一首歌，回到列表的开始
+    currentSongIndex = 0; 
   }
 
-  playSdWav1.play(songList[currentSongIndex]);  // 播放下一首歌
+  playSdWav1.play(songList[currentSongIndex]);  
 }
 
 void setGain(int gainLevel) {
