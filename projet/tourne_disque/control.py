@@ -100,8 +100,11 @@ class VinylDisplay(QGraphicsView):
         btn_1.setGeometry(int(a/3)-10,330,40,40)
         btn_1.clicked.connect(self.start)
         btn_2 = QPushButton('STOP',self)
-        btn_2.setGeometry(int(a/3)+155,330, 40, 40)
+        btn_2.setGeometry(int(a/3)+98,330, 40, 40)
         btn_2.clicked.connect(self.stop)
+        btn_3 = QPushButton('NEXT',self)
+        btn_3.setGeometry(int(a/3)+206,330, 40, 40)
+        btn_3.clicked.connect(self.next)
         btn_exit = QPushButton('EXIT', self)
         btn_exit.setGeometry(int(a/3)+315,330, 40, 40)
         btn_exit.clicked.connect(self.exit_app)
@@ -116,10 +119,10 @@ class VinylDisplay(QGraphicsView):
         needleCenterY = recordCenterY - (self.cp_comp_2.pixmap_item_2.pixmap().height() / 2) + 30  # 根据需要调整偏移量
         self.cp_comp_2.pixmap_item_2.setPos(needleCenterX, needleCenterY)
 
-    '''def resizeEvent(self, event):
+    def resizeEvent(self, event):
         self.scene.setSceneRect(0,0,200,200)
         self.updateItemsPosition()
-        super(VinylDisplay, self).resizeEvent(event)'''
+        super(VinylDisplay, self).resizeEvent(event)
 
     def exit_app(self):
         QApplication.instance().quit()
@@ -139,6 +142,14 @@ class VinylDisplay(QGraphicsView):
             self.isStopped = True
             self.isPlaying = False
             arduino.write(b'S')
+
+    def next(self):
+        if self.isPlaying or self.isStopped: 
+            self.cp_comp_1.anim.start()
+            self.cp_comp_2.anim_1.start()
+            self.isPlaying = True  
+            self.isStopped = False  
+            arduino.write(b'X')
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -167,22 +178,22 @@ class MainWindow(QMainWindow):
         # wow slider 
         self.wowSlider = QSlider(Qt.Vertical)
         self.wowSlider.setMinimum(0)
-        self.wowSlider.setMaximum(5)  # range
-        self.wowSlider.setValue(0)  # default
-        self.wowLabel = QLabel('Wow: 0%')
+        self.wowSlider.setMaximum(8)  # range
+        self.wowSlider.setValue(4)  # default
+        self.wowLabel = QLabel('Wow: 4%')
         self.wowLabel.setFixedSize(100, 30)
         self.wowSlider.valueChanged.connect(lambda: self.wowLabel.setText(f'Wow: {self.wowSlider.value()}%'))
 
-        # hiss slider
-        self.hissSlider = QSlider(Qt.Vertical)
-        self.hissSlider.setMinimum(0)
-        self.hissSlider.setMaximum(10)  
-        self.hissSlider.setValue(0)  
-        self.hissLabel = QLabel('Hiss: 0dB')
-        self.hissLabel.setFixedSize(100, 30)
-        self.hissSlider.valueChanged.connect(lambda: self.hissLabel.setText(f'Hiss: {self.hissSlider.value()}dB'))
+        # noise slider
+        self.noiseSlider = QSlider(Qt.Vertical)
+        self.noiseSlider.setMinimum(0)
+        self.noiseSlider.setMaximum(10)  
+        self.noiseSlider.setValue(5)  
+        self.noiseLabel = QLabel(f'Noise: {self.noiseSlider.value()}')
+        self.noiseLabel.setFixedSize(100, 30)
+        self.noiseSlider.valueChanged.connect(lambda: (self.changeNoise(self.noiseSlider.value()),self.noiseLabel.setText(f'Noise: {self.noiseSlider.value()}dB')))
 
-        # 创建gain滑块
+        # gain slider
         self.gainSlider = QSlider(Qt.Vertical)
         self.gainSlider.setMinimum(0)
         self.gainSlider.setMaximum(100)  
@@ -191,7 +202,7 @@ class MainWindow(QMainWindow):
         self.gainLabel.setFixedSize(100, 30)
         self.gainSlider.valueChanged.connect(lambda: (self.changeGain(self.gainSlider.value()), self.gainLabel.setText(f'Gain: {self.gainSlider.value()}')))
 
-        for i, (label, slider) in enumerate([(self.wowLabel, self.wowSlider), (self.hissLabel, self.hissSlider), (self.gainLabel, self.gainSlider)]):
+        for i, (label, slider) in enumerate([(self.wowLabel, self.wowSlider), (self.noiseLabel, self.noiseSlider), (self.gainLabel, self.gainSlider)]):
             vbox = QVBoxLayout()
             vbox.addWidget(label)
             vbox.addWidget(slider)
@@ -204,6 +215,10 @@ class MainWindow(QMainWindow):
     def changeGain(self,gain):
         arduino.write(b'G')
         arduino.write(bytes([gain]))
+
+    def changeNoise(self,noise):
+        arduino.write(b'N')
+        arduino.write(bytes([noise]))
 
 
 app = QApplication(argv)
