@@ -11,7 +11,7 @@
 ### _Notices_
 1. The Sampling Rate of original music should be 1411kbps.
 2. Music should be stored in the SD card under the form ".wav".
-3. The interface has 3 parameters adjustable
+3. The interface has 3 parameters adjustable 
    "degra" : level of degradation  
    "noise" : level of white noise  
    "gain"  : volume of the output  
