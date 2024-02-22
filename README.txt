@@ -2,7 +2,7 @@ Simple Vinyl Simulator for Teensys 4.0
 
 Prerequisites
 Before starting, ensure you have the following installed:
-- Arduino IDE 1.8 (recommended) or later versions like 2.2，with "Audio", "SD", "SerialFlash" in the library.
+- Arduino IDE 1.8 (recommended) or later versions like 2.2，with "Audio", "SD", "SerialFlash" libraries.
 - Python, with `pyserial` and `PyQt5` libraries.
 
 Implementation steps
