@@ -1,23 +1,23 @@
-#ifndef thrumps_teensy_h_
-#define thrumps_teensy_h_
+#ifndef thumps_teensy_h_
+#define thumps_teensy_h_
 
 #include "Arduino.h"
 #include "AudioStream.h"
 #include "Audio.h"
 
-class thrumps : public AudioStream
+class thumps : public AudioStream
 {
   public:
-    thrumps();
-    ~thrumps();
+    thumps();
+    ~thumps();
     
     virtual void update();
     void Setplay();
     float discon_time;
     float tail_time;
     float gap; 
-    bool is_thrump;
-    int thrump_num;
+    bool is_thump;
+    int thump_num;
     
 };
 
