@@ -4,7 +4,7 @@
 #include <SD.h>
 #include <SerialFlash.h>
 #include "clicks.h"
-#include "thrumps.h"
+#include "thumps.h"
 #include "multimixer.h"
 
 
@@ -14,7 +14,7 @@ AudioOutputI2S           i2s1;
 AudioMixer4              mixer1; // mixer for the left channel
 AudioMixer4              mixer2; // mixer for the right channel      
 clicks                   clic;
-thrumps                  thrump;      
+thumps                   thump;      
 multimixer               mul;  
 
 
@@ -25,11 +25,11 @@ AudioConnection          patchCord8(playWav1, 1, mul, 1);
 // connect the result with clicks and thumps 
 AudioConnection          patchCord1(mul, 0, mixer1, 0);
 AudioConnection          patchCord2(clic, 0, mixer1, 1);  
-AudioConnection          patchCord3(thrump, 0, mixer1, 2);
+AudioConnection          patchCord3(thump, 0, mixer1, 2);
 
 AudioConnection          patchCord4(mul, 0 , mixer2, 0);
 AudioConnection          patchCord5(clic, 0, mixer2, 1);
-AudioConnection          patchCord6(thrump, 0, mixer2, 2);
+AudioConnection          patchCord6(thump, 0, mixer2, 2);
 
 // output 
 AudioConnection          patchCord9(mixer1, 0, i2s1, 0);
@@ -92,11 +92,11 @@ void setup() {
   
   mixer1.gain(0, 0.6); // set the gain for the playWav1
   mixer1.gain(1, 50000.0); // set the gain for the click
-  mixer1.gain(2, 100000.0); // set the gain for the thrump
+  mixer1.gain(2, 100000.0); // set the gain for the thump
   
   mixer2.gain(0, 0.6); // set the gain for the playWav1
   mixer2.gain(1, 50000.0); // set the gain for the click
-  mixer2.gain(2, 100000.0); // set the gain for the thrump 
+  mixer2.gain(2, 100000.0); // set the gain for the thump 
   
 }
 
@@ -178,12 +178,13 @@ void loop() {
     };
 
     // if it is the time to play the thump, generate a thump
-    if (musicPlaybackPosition >= thrump.gap * 1000 * thrump.thrump_num && musicPlaybackPosition <= thrump.gap * 1000 * thrump.thrump_num + 10) {
-       if (thrump.thrump_num >=3 && thrump.thrump_num <=20){
-        thrump.Setplay();
-        //Serial.println("Thrump started at " + String(musicPlaybackPosition));
+    if (musicPlaybackPosition >= thump.gap * 1000 * thump.thump_num && musicPlaybackPosition <= thump.gap * 1000 * thump.thump_num + 10) {
+      // we assume that this crack appears between third and 20th cicle in the disc
+      if (thump.thump_num >=3 && thump.thump_num <=20){
+        thump.Setplay();
+        //Serial.println("Thump started at " + String(musicPlaybackPosition));
        };
-       thrump.thrump_num++;
+       thump.thump_num++;
     }
   }
   
@@ -193,10 +194,10 @@ void loop() {
     patchCord10.disconnect();
     Serial.println("File has finished playing");
     
-    // Stop the click and thrump
-    thrump.Setplay();
-    thrump.thrump_num = 1;
-    Serial.println("Thrump stopped");
+    // Stop the click and thump
+    thump.Setplay();
+    thump.thump_num = 1;
+    Serial.println("Thump stopped");
     clic.Setplay();
     clic.Resetindex();
     Serial.println("Click stopped");
