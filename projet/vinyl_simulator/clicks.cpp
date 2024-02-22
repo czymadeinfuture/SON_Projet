@@ -37,31 +37,31 @@ float clicks::Gap(){
   return gap;
 }*/
 
+// Gereration of duration,gap and amplitude by using the same model
 float clicks::Duration() {
-    // 使用 Arduino 的随机函数生成近似的 Weibull 分布随机数
-    // 注意: 这是一个非常简化的近似，可能不适合所有用途
-    float uniformRandom = random(1000) / 1000.0; // 生成一个 [0, 1) 范围的随机数
+    float uniformRandom = random(1000) / 1000.0; 
     float dur = pow((-log(1 - uniformRandom)), 0.5) * 0.4;
     return dur;
 }
 
 float clicks::Gap() {
-    // 使用 Arduino 的随机函数生成近似的 Gamma 分布随机数
-    // 注意: 这是一个非常简化的近似，可能不适合所有用途
-    float uniformRandom = random(1000) / 1000.0; // 生成一个 [0, 1) 范围的随机数
+    float uniformRandom = random(1000) / 1000.0; 
     float gap = pow((-log(1 - uniformRandom)), 0.4) * 0.9;
     return gap;
 }
+
 float clicks::Amplitude(){
-    float uniformRandom = random(1000) / 1000.0; // 生成一个 [0, 1) 范围的随机数
+    float uniformRandom = random(1000) / 1000.0; 
     float am = pow((-log(1 - uniformRandom)), 0.3) * 1.0;
   return am;
 }
 
+// control of the generation of click
 void clicks::Setplay(){
   is_click = not is_click;
 }
 
+// reset the index of click to the begining
 void clicks::Resetindex(){
   click_index = 1.0;
 }
