@@ -1,4 +1,4 @@
-#include "thrumps.h"
+#include "thumps.h"
 #include <cmath>
 #include <cstdlib>
 #define MULT_16 32767
@@ -6,28 +6,31 @@
 #define AUDIO_OUTPUTS 1
 #define decayFactor 0.05
 
-thrumps::thrumps() :
+thumps::thumps() :
 AudioStream(AUDIO_OUTPUTS, new audio_block_t*[AUDIO_OUTPUTS])
 {
     discon_time = 0.02;
     tail_time = 1.0;
     gap = 60.0/33.0;
-    is_thrump = false;
-    thrump_num = 1;
+    is_thump = false;
+    thump_num = 1;
 }
 
-thrumps::~thrumps(){}
+thumps::~thumps(){}
 
-void thrumps::Setplay(){
-    is_thrump = not is_thrump;
+// control the generation of thump
+void thumps::Setplay(){
+    is_thump = not is_thump;
 }
 
-void thrumps::update(){
+void thumps::update(){
     audio_block_t *block[AUDIO_OUTPUTS];
-    // Calculate the number of samples for each part of the thrump
+    
+    // Calculate the number of samples for each part of the thump
     float discon_Samples = round(discon_time * SAMPLE_RATE_HZ);
     float tail_Samples = round(tail_time * SAMPLE_RATE_HZ);
-    if (is_thrump){
+    
+    if (is_thump){
         for (int channel = 0; channel < AUDIO_OUTPUTS; channel++) {
             block[channel] = allocate();
             if (block[channel]) { 
@@ -48,6 +51,7 @@ void thrumps::update(){
                           index = 0;
                       }
                 };
+                
                 // Generate the tail
                 int i2 = 0;
                 while (i2 < tail_Samples) {
@@ -69,7 +73,7 @@ void thrumps::update(){
                 };
                 transmit(block[channel], channel);
                 release(block[channel]);
-                is_thrump = false;
+                is_thump = false;  
             }
         }
     }
