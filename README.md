@@ -2,11 +2,12 @@
 ## _Implementation steps_
 1. Download the file projet.
 2. In the file "vinyl_simulator", you can find "vinyl_simulator.ino".
-3. Open it in Arduino IDE 1.8(recommanded), but can be used in Arduino 2.2 ou plus.
-4. Compile and upload it to your Teensys 4.0 ( Don't forget to choose the teensy 4.0 and corresponded port in the "tools").
-5. If it goes well, open the file "tourne_disque".
-6. Run control.py ( If you meet the error, check if you have downloaded pyserial, pyQt5 in python).
-7. Enjoy yourself!
+3. Open it in Arduino IDE 1.8 (recommanded), but can be used in Arduino 2.2 ou plus.
+4. Download "Audio", "SD", "SerialFlash" in the library.
+5. Compile and upload it to your Teensys 4.0 ( Don't forget to choose the "Teensy 4.0" and corresponded port in the "tools").
+6. If it goes well, open the file "tourne_disque".
+7. Run control.py ( If you meet the error, check if you have downloaded pyserial, pyQt5 in python).
+8. Enjoy yourself!
 
 ### _Notices_
 1. The Sampling Rate of original music should be 1411kbps.
