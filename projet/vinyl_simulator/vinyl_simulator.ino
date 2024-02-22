@@ -18,11 +18,11 @@ thrumps                  thrump;
 multimixer               mul;  
 
 
-// connect playWav1, click and thrump to the mixer
-
+// connect playWav1, lowpass filter, white noise and degradation.
 AudioConnection          patchCord7(playWav1, 0, mul, 0);
 AudioConnection          patchCord8(playWav1, 1, mul, 1);
 
+// connect the result with clicks and thumps 
 AudioConnection          patchCord1(mul, 0, mixer1, 0);
 AudioConnection          patchCord2(clic, 0, mixer1, 1);  
 AudioConnection          patchCord3(thrump, 0, mixer1, 2);
@@ -31,6 +31,7 @@ AudioConnection          patchCord4(mul, 0 , mixer2, 0);
 AudioConnection          patchCord5(clic, 0, mixer2, 1);
 AudioConnection          patchCord6(thrump, 0, mixer2, 2);
 
+// output 
 AudioConnection          patchCord9(mixer1, 0, i2s1, 0);
 AudioConnection          patchCord10(mixer2, 0, i2s1, 1);
 
@@ -89,7 +90,6 @@ void setup() {
     }
   }
   
-  
   mixer1.gain(0, 0.6); // set the gain for the playWav1
   mixer1.gain(1, 50000.0); // set the gain for the click
   mixer1.gain(2, 100000.0); // set the gain for the thrump
@@ -102,14 +102,14 @@ void setup() {
 
 // define a fonction to play the file stocked in the sd card
 void playFile(const char *filename){
+ 
+  // reconnect the output
   patchCord9.connect();
   patchCord10.connect();
   
   Serial.print("Playing file: ");
   Serial.println(filename);
 
-  // Start playing the file.  This sketch continues to
-  // run while the file plays.
   playWav1.play(filename);
 
   // A brief delay for the library read WAV info
@@ -170,11 +170,14 @@ void loop() {
 
   if (playWav1.isPlaying()) {
     musicPlaybackPosition = playWav1.positionMillis();
-    // If it is the time to play the click or the thrump, set the play
+    
+    // If it is the time to play the click, generate a click
     if (musicPlaybackPosition >= clic.click_index * 1000 && musicPlaybackPosition <= clic.click_index * 1000 + 100) {
       clic.Setplay();
       //Serial.println("Click started at " + String(musicPlaybackPosition));
     };
+
+    // if it is the time to play the thump, generate a thump
     if (musicPlaybackPosition >= thrump.gap * 1000 * thrump.thrump_num && musicPlaybackPosition <= thrump.gap * 1000 * thrump.thrump_num + 10) {
        if (thrump.thrump_num >=3 && thrump.thrump_num <=20){
         thrump.Setplay();
@@ -183,10 +186,11 @@ void loop() {
        thrump.thrump_num++;
     }
   }
+  
+  // When the file is finished (playWav1.isPlaying() == false)
   else{
     patchCord9.disconnect();
     patchCord10.disconnect();
-    // When the file is finished (playWav1.isPlaying() == false)
     Serial.println("File has finished playing");
     
     // Stop the click and thrump
